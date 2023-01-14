@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
@@ -175,9 +174,11 @@ class _ChatState extends State<Chat> {
         }
 
       });
-    },onError: (e){
+    },
+        onError: (e){
       //print(e);
-    },onDone: () {
+          },
+        onDone: () {
       //print('done');
       // handleSubmitted(_textController.text);
     });
