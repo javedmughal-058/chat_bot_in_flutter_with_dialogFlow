@@ -30,7 +30,7 @@ class _ChatState extends State<Chat> {
 
   // TODO DialogflowGrpc class instance
 
-  late DialogflowGrpcV2Beta1 dialogflow;
+  late DialogflowGrpcV2Beta1? dialogflow;
 
   @override
   void initState() {
@@ -48,10 +48,11 @@ class _ChatState extends State<Chat> {
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlugin() async {
     _recorderStatus = _recorder.status.listen((status) {
-      if (mounted)
+      if (mounted) {
         setState(() {
           _isRecording = status == SoundStreamStatus.Playing;
         });
+      }
     });
 
     await Future.wait([
@@ -68,11 +69,6 @@ class _ChatState extends State<Chat> {
     dialogflow = DialogflowGrpcV2Beta1.viaServiceAccount(serviceAccount);
   }
 
-  void stopStream() async {
-    await _recorder.stop();
-    await _audioStreamSubscription.cancel();
-    await _audioStream.close();
-  }
 
   void handleSubmitted(text) async {
     print(text);
@@ -90,7 +86,7 @@ class _ChatState extends State<Chat> {
       _messages.insert(0, message);
     });
 
-    DetectIntentResponse data = await dialogflow.detectIntent(text, 'en-US');
+    DetectIntentResponse data = await dialogflow!.detectIntent(text, 'en-US');
     String fulfillmentText = data.queryResult.fulfillmentText;
     if(fulfillmentText.isNotEmpty) {
       ChatMessage botMessage = ChatMessage(
@@ -105,6 +101,11 @@ class _ChatState extends State<Chat> {
     }
   }
 
+  void stopStream() async {
+    await _recorder.stop();
+    await _audioStreamSubscription.cancel();
+    await _audioStream.close();
+  }
   void handleStream() async {
     _recorder.start();
 
@@ -140,7 +141,7 @@ class _ChatState extends State<Chat> {
       Container(
           decoration: BoxDecoration(color: Theme.of(context).cardColor),
           child: IconTheme(
-            data: IconThemeData(color: Theme.of(context).accentColor),
+            data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Row(
@@ -179,7 +180,7 @@ class _ChatState extends State<Chat> {
 //
 //------------------------------------------------------------------------------------
 class ChatMessage extends StatelessWidget {
-  ChatMessage({required this.text, required this.name, required this.type});
+  const ChatMessage({Key? key, required this.text, required this.name, required this.type}) : super(key: key);
 
   final String text;
   final String name;
