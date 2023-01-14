@@ -5,7 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 void main() {
-  runApp(const ChatBot());
+  runApp(const MaterialApp(
+    title: 'US App',
+    debugShowCheckedModeBanner: false,
+    home:  ChatBot(),
+  ));
 }
 
 class ChatBot extends StatefulWidget {
@@ -21,9 +25,7 @@ class _ChatBotState extends State<ChatBot> {
   List<Map> messsages = [];
 
   void response(query) async {
-    AuthGoogle authGoogle =
-    await AuthGoogle(fileJson: "assets/farmtech-fh9j-3db6e0409c71.json")
-        .build();
+    AuthGoogle authGoogle = await AuthGoogle(fileJson: "assets/farmtech-fh9j-3db6e0409c71.json").build();
     DialogFlow dialogflow = DialogFlow(authGoogle: authGoogle, language: "en");
     AIResponse aiResponse = await dialogflow.detectIntent(query);
     setState(() {
@@ -36,71 +38,73 @@ class _ChatBotState extends State<ChatBot> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        toolbarHeight: 70,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft:  Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
-        ),
-        elevation: 10,
-        title: const Text("DialogFlow Chat_bot"),
-      ),
-      body: Column(
-        children: [
-          Flexible(
-              child: ListView.builder(
-                  reverse: true,
-                  itemCount: messsages.length,
-                  itemBuilder: (context, index) => chat(
-                      messsages[index]["message"].toString(),
-                      messsages[index]["data"]))),
-          const Divider(
-            height: 6.0,
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 20),
-            margin: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              children: <Widget>[
-                Flexible(
-                    child: TextField(
-                      controller: messageInsert,
-                      decoration: const InputDecoration.collapsed(
-                          hintText: "Send your message",
-                          hintStyle: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18.0)),
-                    )),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: IconButton(
-                      icon: const Icon(
-                        Icons.send,
-                        size: 30.0,
-                      ),
-                      onPressed: () {
-                        if (messageInsert.text.isEmpty) {
-                          print("empty message");
-                        } else {
-                          setState(() {
-                            messsages.insert(0,
-                                {"data": 1, "message": messageInsert.text});
-                          });
-                          response(messageInsert.text);
-                          messageInsert.clear();
-                        }
-                      }),
-                )
-              ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          toolbarHeight: 70,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft:  Radius.circular(30),
+              bottomRight: Radius.circular(30),
             ),
           ),
-          const SizedBox(
-            height: 15.0,
-          )
-        ],
+          elevation: 10,
+          title: const Text("DialogFlow Chat_bot"),
+        ),
+        body: Column(
+          children: [
+            Flexible(
+                child: ListView.builder(
+                    reverse: true,
+                    itemCount: messsages.length,
+                    itemBuilder: (context, index) => chat(
+                        messsages[index]["message"].toString(),
+                        messsages[index]["data"]))),
+            const Divider(
+              height: 6.0,
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 20),
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                children: <Widget>[
+                  Flexible(
+                      child: TextField(
+                        controller: messageInsert,
+                        decoration: const InputDecoration.collapsed(
+                            hintText: "Send your message",
+                            hintStyle: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18.0)),
+                      )),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: IconButton(
+                        icon: const Icon(
+                          Icons.send,
+                          size: 30.0,
+                        ),
+                        onPressed: () {
+                          if (messageInsert.text.isEmpty) {
+                            print("empty message");
+                          } else {
+                            setState(() {
+                              messsages.insert(0,
+                                  {"data": 1, "message": messageInsert.text});
+                            });
+                            response(messageInsert.text);
+                            messageInsert.clear();
+                          }
+                        }),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 15.0,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -118,10 +122,10 @@ class _ChatBotState extends State<ChatBot> {
             padding: const EdgeInsets.all(2.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
+              children: [
                 CircleAvatar(
                   backgroundImage: AssetImage(
-                      data == 0 ? "assets/bot.png" : "assets/user.png"),
+                      data == 0 ? "assets/images/bot.png" : "assets/images/user.jpeg"),
                 ),
                 const SizedBox(
                   width: 10.0,
