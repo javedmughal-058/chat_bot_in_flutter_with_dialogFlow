@@ -38,6 +38,11 @@ dependencies:
   speech_to_text: ^5.4.3
   flutter_tts: ^3.3.3
   bubble: ^1.2.1
+  sound_stream: ^0.3.0
+  rxdart: ^0.27.7
+  dialogflow_grpc: ^0.2.9
+
+
 
 dev_dependencies:
   flutter_test:
