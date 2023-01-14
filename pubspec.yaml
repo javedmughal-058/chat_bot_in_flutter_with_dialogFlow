@@ -34,10 +34,10 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  dialogflow_flutter: ^1.0.0
-  speech_to_text: ^5.4.3
-  flutter_tts: ^3.3.3
-  bubble: ^1.2.1
+#  dialogflow_flutter: ^1.0.0
+#  speech_to_text: ^5.4.3
+#  flutter_tts: ^3.3.3
+#  bubble: ^1.2.1
   sound_stream: ^0.3.0
   rxdart: ^0.27.7
   dialogflow_grpc: ^0.2.9

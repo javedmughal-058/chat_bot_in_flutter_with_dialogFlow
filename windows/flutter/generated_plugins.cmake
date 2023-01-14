@@ -4,7 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   dialogflow_grpc
-  flutter_tts
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
