@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
@@ -119,10 +120,74 @@ class _ChatState extends State<Chat> {
     // TODO Create SpeechContexts
     // Create an audio InputConfig
 
+    var biasList = SpeechContextV2Beta1(
+        phrases: [
+          'Dialogflow CX',
+          'Dialogflow Essentials',
+          'Action Builder',
+          'HIPAA'
+        ],
+        boost: 20.0
+    );
+
+    // See: https://cloud.google.com/dialogflow/es/docs/reference/rpc/google.cloud.dialogflow.v2#google.cloud.dialogflow.v2.InputAudioConfig
+    var config = InputConfigV2beta1(
+        encoding: 'AUDIO_ENCODING_LINEAR_16',
+        languageCode: 'en-US',
+        sampleRateHertz: 16000,
+        singleUtterance: false,
+        speechContexts: [biasList]
+    );
+
+    final responseStream = dialogflow!.streamingDetectIntent(config, _audioStream);
+
+
+    // Get the transcript and detectedIntent and show on screen
+    responseStream.listen((data) {
+      //print('----');
+      setState(() {
+        //print(data);
+        String transcript = data.recognitionResult.transcript;
+        String queryText = data.queryResult.queryText;
+        String fulfillmentText = data.queryResult.fulfillmentText;
+
+        if(fulfillmentText.isNotEmpty) {
+
+          ChatMessage message = ChatMessage(
+            text: queryText,
+            name: "You",
+            type: true,
+          );
+
+          ChatMessage botMessage = ChatMessage(
+            text: fulfillmentText,
+            name: "Bot",
+            type: false,
+          );
+
+          _messages.insert(0, message);
+          _textController.clear();
+          _messages.insert(0, botMessage);
+
+        }
+        if(transcript.isNotEmpty) {
+          _textController.text = transcript;
+        }
+
+      });
+    },onError: (e){
+      //print(e);
+    },onDone: () {
+      //print('done');
+      // handleSubmitted(_textController.text);
+    });
+
     // TODO Make the streamingDetectIntent call, with the InputConfig and the audioStream
     // TODO Get the transcript and detectedIntent and show on screen
 
   }
+
+
 
   // The chat interface
   //
@@ -139,7 +204,7 @@ class _ChatState extends State<Chat> {
           )),
       const Divider(height: 1.0),
       Container(
-          decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+          decoration: BoxDecoration(color: Theme.of(context).cardColor),
           child: IconTheme(
             data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
             child: Container(
@@ -189,8 +254,14 @@ class ChatMessage extends StatelessWidget {
   List<Widget> otherMessage(context) {
     return <Widget>[
       Container(
-        margin: const EdgeInsets.only(right: 16.0),
-        child: CircleAvatar(child:  Image.asset('assets/images/bot.png', fit: BoxFit.fill,)),
+        margin: EdgeInsets.only(right: 8),
+        height: 30,
+        width: 30,
+        child: CircleAvatar(
+          // backgroundColor: Colors.brown,
+          backgroundImage: AssetImage(
+              'assets/images/bot.png'),
+        ),
       ),
       Expanded(
         child: Column(
@@ -222,9 +293,11 @@ class ChatMessage extends StatelessWidget {
         ),
       ),
       Container(
-        margin: const EdgeInsets.only(left: 16.0),
-        child: CircleAvatar(
-            child: Image.asset('assets/images/user.png',fit: BoxFit.fill,)),
+        margin: EdgeInsets.only(left: 8),
+        height: 30,
+        width:  30,
+        child: const CircleAvatar(
+          backgroundImage: AssetImage('assets/images/user.png')),
       ),
     ];
   }
