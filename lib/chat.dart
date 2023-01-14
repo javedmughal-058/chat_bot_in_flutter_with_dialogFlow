@@ -129,7 +129,7 @@ class _ChatState extends State<Chat> {
   //------------------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
+    return Column(children: [
       Flexible(
           child: ListView.builder(
             padding: const EdgeInsets.all(8.0),
@@ -139,7 +139,7 @@ class _ChatState extends State<Chat> {
           )),
       const Divider(height: 1.0),
       Container(
-          decoration: BoxDecoration(color: Theme.of(context).cardColor),
+          decoration: BoxDecoration(color: Theme.of(context).primaryColor),
           child: IconTheme(
             data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
             child: Container(
@@ -190,14 +190,13 @@ class ChatMessage extends StatelessWidget {
     return <Widget>[
       Container(
         margin: const EdgeInsets.only(right: 16.0),
-        child: const CircleAvatar(child:  Text('B')),
+        child: CircleAvatar(child:  Image.asset('assets/images/bot.png', fit: BoxFit.fill,)),
       ),
       Expanded(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(name,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
             Container(
               margin: const EdgeInsets.only(top: 5.0),
               child: Text(text),
@@ -225,10 +224,7 @@ class ChatMessage extends StatelessWidget {
       Container(
         margin: const EdgeInsets.only(left: 16.0),
         child: CircleAvatar(
-            child: Text(
-              name[0],
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            )),
+            child: Image.asset('assets/images/user.png',fit: BoxFit.fill,)),
       ),
     ];
   }
